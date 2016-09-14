@@ -8,17 +8,16 @@
 
 #ifndef Switch_h
 #define Switch_h
-#include "WProgram.h"
 
-class Switch {
+#include "Arduino.h"
+
+class Switch
+{
 	public:
-		Switch();
-		~Switch();
-
+		Switch(int numSwitches, int switchData);
+		// ~Switch();
 		void makeTurn(int switchId);
 		void makeStraight(int switchId);
-
-		std:array buildSwitcdhDetails();
 };
 
 #endif

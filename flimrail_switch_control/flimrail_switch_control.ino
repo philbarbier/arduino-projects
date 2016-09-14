@@ -1,8 +1,10 @@
-#include <Servo.h>
 #include <Switch.h>
 
+#include <Servo.h>
+
+
 const int maxNumSwitches = 24;
-const int numSwitches = 8;
+const int numSwitches = 2;
 
 // switches that work as pairs (ie: crossovers)
 const int switchPairs[4][2] = {
@@ -39,7 +41,8 @@ const int switchData[8][6] = {
  * - outputPin
  * - id
  * - location?
- * - switchType - wtf is this for?
+ * - switchType - was intended to identify differences in switches for servo movement
+ *              - not necessary anymore since switchData contains the servo movement value
  * - defaultDirection (straight / turned)
  * 
  * switch has following methods
@@ -56,51 +59,42 @@ const int switchData[8][6] = {
 int switchState = 0;
 int b = 0;
 int die = 0;
+
 // Servo servos[8];
 
 void setup() {
   Serial.begin(9600);
-  // attach servos
-  switches = new Switch(switchData); // how to init array of Switches?
-  for (int i=0; i < numSwitches; i++) {
-    // servos[i].attach(switchData[i][3]);
-    
+  Switch switches(numSwitches, switchData);
+  
+  for (int i=0; i < (numSwitches-1); i++) {
+    pinMode(switchData[i][2], INPUT); 
   }
-  switch1.attach(servoPin);
-  pinMode(switchPin, INPUT);
 }
 
 void loop() {
-  //exit(0);
-  //delay(500);
-  for (i=0; i < (numSwitches-1); i++) {
+
+  for (int i=0; i < (numSwitches-1); i++) {
     // scan for inputs
     switchState = digitalRead(switchData[i][2]);
+
+    Serial.println(switchState);
     
     if (switchState == LOW) {
-      Switch::makeTurn(switchData[i]);
+      switches::makeTurn(switchData[i]);
       Serial.println("turn");
     } else {
-      Switch::makeStraight(switchData[i]);
+      switches::makeStraight(switchData[i]);
       Serial.println("straight");
     }
   }
   
-  delay(1);
+  delay(250);
   
-  if (die > 5000) {
+  if (die > 2500) {
     Serial.println("End");
+    delay(25);
     exit(0);
   }
   die++;
-}
-
-
-void makeTurn() {
-  switch1.write(servoMax);
-}
-
-void makeStraight() {
-  switch1.write(0);
 }
 
