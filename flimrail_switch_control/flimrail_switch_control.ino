@@ -1,5 +1,4 @@
 #include <Switch.h>
-#include <Servo.h>
 
 const int numSwitches = 2;
 
@@ -74,20 +73,17 @@ void loop() {
     // scan for inputs
     switchState = digitalRead(switchData[i][2]);
 
-    Serial.println(switchState);
-    
     if (switchState == LOW) {
       switches.makeTurn(switchData[i][0], switchData[i][1]);
-      Serial.println("turn");
     } else {
       switches.makeStraight(switchData[i][0]);
-      Serial.println("straight");
     }
+    delay(1);
   }
   
   delay(250);
   
-  if (die > 2500) {
+  if (die > 10) {
     Serial.println("End");
     delay(25);
     exit(0);

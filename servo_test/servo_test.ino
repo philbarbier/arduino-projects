@@ -2,25 +2,36 @@
 
 Servo switch1;
 
-int controlPin = 47;
-int servoPin = 7;
+int controlPin = 2;
+int servoPin = 27;
 int b = 0;
+int die = 0;
 int switchMax = 25;
 
 void setup() {
   switch1.attach(servoPin);
+  Serial.begin(9600);
 }
 
 void loop() {
 
-  makeTurn();
+  int switchState = digitalRead(controlPin);
 
-  makeStraight();
+  Serial.println("state: ");
+  Serial.println(switchState);
+  if (switchState == 0) {
+    makeTurn();
+  } else {
+    makeStraight();  
+  }
+
+  //exit(0);
   
-
+  if (die > 25) {
+    exit(0);
+  }
   
-
-  exit(0);
+  die++;
 }
 
 void makeTurn() {

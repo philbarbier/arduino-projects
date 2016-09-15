@@ -18,9 +18,12 @@
 
 Servo servos[24];
 
+int timeDelay = 50;
+
 // constructor
 Switch::Switch(int numSwitches) {
   Servo servos[numSwitches];
+  Serial.begin(9600);
 }
 
 // destructor ?
@@ -33,11 +36,31 @@ void Switch::attachServo(int switchId, int servoPin) {
 
 void Switch::makeTurn(int switchId, int servoMove) {
 	// access switch data, turn servo by switchType movement value constant declared above
-  servos[switchId].write(servoMove);
+
+	Serial.println(switchId);
+	Serial.println(servoMove);
+
+	for (int i=0; i < servoMove; i++) {
+		if (servos[switchId].read() < servoMove) {
+			Serial.println("turn");
+			Serial.println(i);
+			servos[switchId].write(i);
+			delay(timeDelay);
+		}
+	}
 }
 
 void Switch::makeStraight(int switchId) {
 	// access switch data, move servo to position 0
-  servos[switchId].write(0);
+	int currPos = servos[switchId].read();
+
+	for (int i=currPos; i > 0; i--) {
+		if (servos[switchId].read() > currPos) {
+			Serial.println("straight");
+  			servos[switchId].write(i);
+  			Serial.println(i);
+  			delay(timeDelay);
+		}
+	}
 }
 
