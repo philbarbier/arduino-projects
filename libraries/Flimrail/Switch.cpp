@@ -16,25 +16,28 @@
 #include "Switch.h"
 #include "Servo.h"
 
+Servo servos[24];
+
 // constructor
-Switch::Switch(int numSwitches, int switchData) {
+Switch::Switch(int numSwitches) {
   Servo servos[numSwitches];
-  for (int i=0; i < (numSwitches-1); i++) {
-    servos[i].attach(switchData[i][3]);
-  }
 }
 
 // destructor ?
 //Switch::~Switch() {
 //}
 
-void Switch::makeTurn(int switchData) {
-	// access switch data, turn servo by switchType movement value constant declared above
-  servos[switchData[0]].write(switchData[1]);
+void Switch::attachServo(int switchId, int servoPin) {
+	servos[switchId].attach(servoPin);
 }
 
-void Switch::makeStraight(int switchData) {
+void Switch::makeTurn(int switchId, int servoMove) {
+	// access switch data, turn servo by switchType movement value constant declared above
+  servos[switchId].write(servoMove);
+}
+
+void Switch::makeStraight(int switchId) {
 	// access switch data, move servo to position 0
-  servos[switchData[0]].write(0);
+  servos[switchId].write(0);
 }
 

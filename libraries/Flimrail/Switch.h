@@ -14,9 +14,11 @@
 class Switch
 {
 	public:
-		Switch(int numSwitches, int switchData);
+		Switch(int numSwitches);
 		// ~Switch();
-		void makeTurn(int switchId);
+
+		void attachServo(int switchId, int servoPin);
+		void makeTurn(int switchId, int servoMove);
 		void makeStraight(int switchId);
 };
 
