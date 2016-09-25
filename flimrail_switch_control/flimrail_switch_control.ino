@@ -10,9 +10,8 @@
 const int numSwitches = 2;
 
 // switches that work as pairs (ie: crossovers)
-const int switchPairs[2][2] = {
-  {1,2},
-  {3,4}
+const int switchPairs[1][2] = {
+  {0,1}
 };
 /*
  * Have custom header for switch object .h and .cpp, has functions to makeTurn/Straight given a switch ID.
@@ -42,9 +41,7 @@ const int switchPairs[2][2] = {
  */
 
 int switchState = 0;
-int b = 0;
 int die = 0;
-//int timeDelay = 250;
 
 // for now have this shit in here, eventually move to SD card + csv
 /*
@@ -68,7 +65,7 @@ Switch switches(numSwitches);
 void setup() {
   Serial.begin(9600);
 
-  for (int i=0; i < (numSwitches-1); i++) {
+  for (int i=0; i < numSwitches; i++) {
     pinMode(switchData[i][2], INPUT);
     switches.attachServo(switchData[i][0], switchData[i][3]);
   }
@@ -79,14 +76,23 @@ void setup() {
 
 void loop() {
 
-  for (int i=0; i < (numSwitches-1); i++) {
+  for (int i=0; i < numSwitches; i++) {
     // scan for inputs
     switchState = digitalRead(switchData[i][2]);
 
+    int pairId = checkIsPair(switchData[i][0]);
+    Serial.println("Pair:");
+    Serial.println(pairId);
     if (switchState == HIGH) {
       switches.makeTurn(switchData[i][0], switchData[i][1]);
+      if (pairId > 0) {
+        switches.makeTurn(pairId, switchData[pairId][1]);
+      }
     } else {
       switches.makeStraight(switchData[i][0]);
+      if (pairId > 0) {
+        switches.makeStraight(pairId);
+      }
     }
     delay(1);
   }
@@ -99,4 +105,19 @@ void loop() {
     exit(0);
   }
   die++;
+}
+
+int checkIsPair(int switchId) {
+  for (int i=0; i < sizeof(switchPairs); i++) {
+    for (int j=0; j < sizeof(switchPairs[i]); j++) {
+      if (switchPairs[i][j] == switchId) {
+        if (j == 0) {
+          return switchPairs[i][1];
+        } else {
+          return switchPairs[i][0];
+        }
+      }
+    }
+  }
+  return 0;
 }

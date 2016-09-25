@@ -20,6 +20,12 @@ Servo servos[1];
 
 int timeDelay = 25;
 
+// switches that work as pairs (ie: crossovers)
+const int switchPairs[2][2] = {
+  {1,2},
+  {3,4}
+};
+
 // constructor
 Switch::Switch(int numSwitches) {
   Servo servos[numSwitches];
@@ -78,4 +84,3 @@ void Switch::makeStraight(int switchId) {
 		}
 	}
 }
-

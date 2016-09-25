@@ -20,6 +20,7 @@ class Switch
 		void attachServo(int switchId, int servoPin);
 		void makeTurn(int switchId, int servoMove);
 		void makeStraight(int switchId);
+		//int checkIsPair(int switchId);
 };
 
 #endif
